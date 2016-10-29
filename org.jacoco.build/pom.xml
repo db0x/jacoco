@@ -14,7 +14,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.7.8-SNAPSHOT</version>
+  <version>0.7.8db0x0001</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -105,20 +105,27 @@
   </modules>
 
   <scm>
-    <connection>scm:git:git://github.com/jacoco/jacoco.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com:jacoco/jacoco.git</developerConnection>
-    <url>https://github.com/jacoco/jacoco</url>
+    <connection>scm:git:git://github.com/db0x/jacoco.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:db0x/jacoco.git</developerConnection>
+    <url>https://github.com/db0x/jacoco</url>
   </scm>
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/jacoco/jacoco/issues</url>
+    <url>https://github.com/db0x/jacoco/issues</url>
   </issueManagement>
+
   <distributionManagement>
-    <repository>
+	<repository>
+		<id>ftp-repository</id>
+		<name>MVN @ db0x</name>
+		<url>ftp://ftp.strato.com</url>
+	</repository>
+    <!-- <repository>
       <id>sonatype-nexus-staging</id>
       <name>Nexus Release Repository</name>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
+     -->
     <snapshotRepository>
       <id>sonatype-nexus-snapshots</id>
       <name>Sonatype Nexus Snapshots</name>
@@ -604,6 +611,14 @@
         </executions>
       </plugin>
     </plugins>
+  	<extensions>
+		<!-- Enabling the use of FTP -->
+		<extension>
+			<groupId>org.apache.maven.wagon</groupId>
+			<artifactId>wagon-ftp</artifactId>
+			<version>1.0-beta-6</version>
+		</extension>
+	</extensions>
   </build>
 
   <profiles>
@@ -1045,5 +1060,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>

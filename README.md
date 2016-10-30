@@ -2,8 +2,8 @@ JaCoCo Java Code Coverage Library
 =================================
 
 ! FORK !
-Anpassungen 
- - die Anotation lombok.Generated wird ausgewertet -> bei Klassen mit dieser Anotation wird _keine_ coverage für die Methoden equals() und hashCode() erstellt.
+geplante Anpassungen 
+ - die Annotation lombok.Generated wird ausgewertet -> bei Klassen mit dieser Annotation wird _keine_ coverage für die Methoden equals() und hashCode() erstellt.
 
 Repositories für Fork : 
 

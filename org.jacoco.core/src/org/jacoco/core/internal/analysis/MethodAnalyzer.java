@@ -276,8 +276,36 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 			final int covered = i.getCoveredBranches();
 			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
 					: CounterImpl.COUNTER_0_1;
-			final ICounter branchCounter = total > 1 ? CounterImpl.getInstance(
-					total - covered, covered) : CounterImpl.COUNTER_0_0;
+			final ICounter branchCounter = total > 1
+					? CounterImpl.getInstance(total - covered, covered)
+					: CounterImpl.COUNTER_0_0;
+			coverage.increment(instrCounter, branchCounter, i.getLine());
+		}
+		coverage.incrementMethodCounter();
+	}
+
+	/**
+	 * 
+	 */
+	public void visitEndFiltered() {
+		// Wire jumps:
+		for (final Jump j : jumps) {
+			LabelInfo.getInstruction(j.target).setPredecessor(j.source);
+		}
+		// Propagate probe values:
+		for (final Instruction p : coveredProbes) {
+			p.setCovered();
+		}
+		// Report result:
+		coverage.ensureCapacity(firstLine, lastLine);
+		for (final Instruction i : instructions) {
+			final int total = i.getBranches();
+			final int covered = i.getBranches();
+			final ICounter instrCounter = covered == 0 ? CounterImpl.COUNTER_1_0
+					: CounterImpl.COUNTER_0_1;
+			final ICounter branchCounter = total > 1
+					? CounterImpl.getInstance(total - covered, covered)
+					: CounterImpl.COUNTER_0_0;
 			coverage.increment(instrCounter, branchCounter, i.getLine());
 		}
 		coverage.incrementMethodCounter();

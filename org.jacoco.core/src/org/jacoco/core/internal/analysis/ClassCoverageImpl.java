@@ -20,7 +20,8 @@ import org.jacoco.core.analysis.IMethodCoverage;
 /**
  * Implementation of {@link IClassCoverage}.
  */
-public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage {
+public class ClassCoverageImpl extends SourceNodeImpl
+		implements IClassCoverage {
 
 	private final long id;
 	private final boolean noMatch;
@@ -29,6 +30,7 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 	private String superName;
 	private String[] interfaces;
 	private String sourceFileName;
+	private boolean lombokGenerated = false;
 
 	/**
 	 * Creates a class coverage data object with the given parameters.
@@ -140,6 +142,14 @@ public class ClassCoverageImpl extends SourceNodeImpl implements IClassCoverage 
 
 	public Collection<IMethodCoverage> getMethods() {
 		return methods;
+	}
+
+	public boolean isLombokGenerated() {
+		return lombokGenerated;
+	}
+
+	public void setLombokGenerated(final boolean lombokGenerated) {
+		this.lombokGenerated = lombokGenerated;
 	}
 
 }

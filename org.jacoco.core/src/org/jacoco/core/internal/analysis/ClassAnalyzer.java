@@ -15,6 +15,7 @@ import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.internal.flow.ClassProbesVisitor;
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -60,12 +61,33 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 	@Override
 	public MethodProbesVisitor visitMethod(final int access, final String name,
-			final String desc, final String signature, final String[] exceptions) {
+			final String desc, final String signature,
+			final String[] exceptions) {
 
 		InstrSupport.assertNotInstrumented(name, coverage.getName());
-
 		if (isMethodFiltered(access, name)) {
 			return null;
+		}
+
+		if (coverage.isLombokGenerated()) {
+			if (name.equals("equals") || name.equals("hashCode")
+					|| name.equals("toString") || name.equals("canEqual")) {
+				return new MethodAnalyzer(stringPool.get(name),
+						stringPool.get(desc), stringPool.get(signature),
+						probes) {
+					@Override
+					public void visitEnd() {
+						super.visitEndFiltered();
+						final IMethodCoverage methodCoverage = getCoverage();
+
+						if (methodCoverage.getInstructionCounter()
+								.getTotalCount() > 0) {
+							// Only consider methods that actually contain code
+							coverage.addMethod(methodCoverage);
+						}
+					}
+				};
+			}
 		}
 
 		return new MethodAnalyzer(stringPool.get(name), stringPool.get(desc),
@@ -74,12 +96,23 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 			public void visitEnd() {
 				super.visitEnd();
 				final IMethodCoverage methodCoverage = getCoverage();
-				if (methodCoverage.getInstructionCounter().getTotalCount() > 0) {
+
+				if (methodCoverage.getInstructionCounter()
+						.getTotalCount() > 0) {
 					// Only consider methods that actually contain code
 					coverage.addMethod(methodCoverage);
 				}
 			}
 		};
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(final String desc,
+			final boolean visible) {
+		if ("Llombok/Generated;".equals(desc)) {
+			coverage.setLombokGenerated(true);
+		}
+		return super.visitAnnotation(desc, visible);
 	}
 
 	// TODO: Use filter hook in future

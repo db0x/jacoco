@@ -117,6 +117,12 @@ public class ClassAnalyzer extends ClassProbesVisitor {
 
 	// TODO: Use filter hook in future
 	private boolean isMethodFiltered(final int access, final String name) {
+		if (coverage.isLombokGenerated()) {
+			if (name.equals("equals") || name.equals("hashCode")
+					|| name.equals("toString") || name.equals("canEqual")) {
+				return true;
+			}
+		}
 		return (access & Opcodes.ACC_SYNTHETIC) != 0
 				&& !name.startsWith("lambda$");
 	}

@@ -4,7 +4,11 @@ JaCoCo Java Code Coverage Library
 ! FORK !
 
 Anpassungen 
- - die Annotation lombok.Generated wird ausgewertet -> bei Klassen mit dieser Annotation wird die Auswertung der Abdeckung für die Methoden equals()hashCode() toString() unterbunden.
+ - die Annotation lombok.Generated wird ausgewertet -> bei Klassen mit dieser Annotation wird die Auswertung der Abdeckung für die Methoden 
+   - equals()
+   - hashCode()
+   - toString() 
+ unterbunden.
  
 Repositories für Fork : 
 
